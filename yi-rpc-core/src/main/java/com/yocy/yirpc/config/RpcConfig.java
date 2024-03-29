@@ -1,10 +1,13 @@
 package com.yocy.yirpc.config;
 
+import lombok.Data;
+
 /**
  * RPC 框架配置
  * 
  * @author <a href="https://github.com/ygncy">YounGCY</a>
  */
+@Data
 public class RpcConfig {
 
     /**
@@ -26,5 +29,10 @@ public class RpcConfig {
      * 服务器端口
      */
     private Integer serverPort = 8080;
+
+    /**
+     * 模拟调用
+     */
+    private boolean mock = false;
     
 }
