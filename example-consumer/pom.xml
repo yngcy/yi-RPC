@@ -12,7 +12,7 @@
     <dependencies>
     <dependency>
         <groupId>com.yocy</groupId>
-        <artifactId>yi-rpc-easy</artifactId>
+        <artifactId>yi-rpc-core</artifactId>
         <version>1.0-SNAPSHOT</version>
     </dependency>
     <dependency>
