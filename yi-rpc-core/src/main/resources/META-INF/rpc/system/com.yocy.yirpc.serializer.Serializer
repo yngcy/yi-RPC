@@ -1,0 +1,2 @@
+c=com.yocy.yirpc.serializer.JdkSerializer
+d=com.yocy.yirpc.serializer.HessianSerializer
