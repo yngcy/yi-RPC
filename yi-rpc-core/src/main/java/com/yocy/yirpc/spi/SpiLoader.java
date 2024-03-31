@@ -88,7 +88,7 @@ public class SpiLoader {
             } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
                      InvocationTargetException e){
                 String errorMsg = String.format("%s 类实例化失败", implClassName);
-                throw new RuntimeException(errorMsg);
+                throw new RuntimeException(errorMsg, e);
             }
         }
         return (T) instanceCache.get(implClassName);

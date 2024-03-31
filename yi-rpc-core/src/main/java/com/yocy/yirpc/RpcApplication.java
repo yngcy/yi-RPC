@@ -1,7 +1,10 @@
 package com.yocy.yirpc;
 
 import com.yocy.yirpc.config.RpcConfig;
+import com.yocy.yirpc.config.RegistryConfig;
 import com.yocy.yirpc.constant.RpcConstant;
+import com.yocy.yirpc.registry.Registry;
+import com.yocy.yirpc.registry.RegistryFactory;
 import com.yocy.yirpc.utils.ConfigUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,8 +26,13 @@ public class RpcApplication {
     public static void init(RpcConfig newRpcConfig) {
         rpcConfig = newRpcConfig;
         log.info("rpc init, config: {}", newRpcConfig.toString());
+        // 注册中心初始化
+        RegistryConfig registryConfig = rpcConfig.getRegistryConfig();
+        Registry registry = RegistryFactory.getInstance(registryConfig.getRegistry());
+        registry.init(registryConfig);
+        log.info("registry init, config = {}", registryConfig);
     }
-
+    
     /**
      * 初始化
      */

@@ -1,5 +1,6 @@
 package com.yocy.yirpc.model;
 
+import com.yocy.yirpc.constant.RpcConstant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +23,11 @@ public class RpcRequest implements Serializable {
      * 服务名称
      */
     private String serviceName;
+
+    /**
+     * 服务版本
+     */
+    private String serviceVersion = RpcConstant.DEFAULT_SERVICE_VERSION;
 
     /**
      * 方法名
