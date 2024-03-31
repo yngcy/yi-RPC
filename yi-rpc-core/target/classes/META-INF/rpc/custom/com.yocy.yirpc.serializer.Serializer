@@ -1,0 +1,2 @@
+a=com.yocy.yirpc.serializer.JsonSerializer
+b=com.yocy.yirpc.serializer.KryoSerializer
