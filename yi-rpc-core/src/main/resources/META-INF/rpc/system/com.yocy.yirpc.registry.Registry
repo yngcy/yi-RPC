@@ -1,1 +1,2 @@
 etcd=com.yocy.yirpc.registry.EtcdRegistry
+zookeeper=com.yocy.yirpc.registry.ZooKeeperRegistry

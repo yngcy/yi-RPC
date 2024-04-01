@@ -30,12 +30,6 @@ public class RegistryTest {
         serviceMetaInfo.setServiceName("myService");
         serviceMetaInfo.setServiceVersion("1.0");
         serviceMetaInfo.setServiceHost("localhost");
-        serviceMetaInfo.setServicePort(1234);
-        registry.register(serviceMetaInfo);
-
-        serviceMetaInfo.setServiceName("myService");
-        serviceMetaInfo.setServiceVersion("1.0");
-        serviceMetaInfo.setServiceHost("localhost");
         serviceMetaInfo.setServicePort(1235);
         registry.register(serviceMetaInfo);
 
@@ -44,7 +38,7 @@ public class RegistryTest {
         serviceMetaInfo.setServiceHost("localhost");
         serviceMetaInfo.setServicePort(1234);
         registry.register(serviceMetaInfo);
-        
+
         serviceMetaInfo.setServiceName("myService");
         serviceMetaInfo.setServiceVersion("3.0");
         serviceMetaInfo.setServiceHost("localhost");
@@ -52,15 +46,15 @@ public class RegistryTest {
         registry.register(serviceMetaInfo);
     }
 
-//    @Test
-//    public void unRegistry() throws Exception {
-//        ServiceMetaInfo serviceMetaInfo = new ServiceMetaInfo();
-//        serviceMetaInfo.setServiceName("myService");
-//        serviceMetaInfo.setServiceVersion("1.0");
-//        serviceMetaInfo.setServiceHost("localhost");
-//        serviceMetaInfo.setServicePort(1234);
-//        registry.unRegistry(serviceMetaInfo);
-//    }
+    @Test
+    public void unRegistry() throws Exception {
+        ServiceMetaInfo serviceMetaInfo = new ServiceMetaInfo();
+        serviceMetaInfo.setServiceName("myService");
+        serviceMetaInfo.setServiceVersion("1.0");
+        serviceMetaInfo.setServiceHost("localhost");
+        serviceMetaInfo.setServicePort(1234);
+        registry.unRegister(serviceMetaInfo);
+    }
 
     @Test
     public void serviceDiscovery() {
@@ -70,6 +64,15 @@ public class RegistryTest {
         String serviceKey = serviceMetaInfo.getServiceKey();
         List<ServiceMetaInfo> serviceMetaInfoList = registry.serviceDiscovery(serviceKey);
         Assert.assertNotNull(serviceMetaInfoList);
+    }
+    
+    
+    @Test
+    public void heartBeat() throws Exception {
+        // init 方法中已经执行心跳检测了
+        registry();
+        // 阻塞1分钟
+        Thread.sleep(60 * 1000L);
     }
 
 }
