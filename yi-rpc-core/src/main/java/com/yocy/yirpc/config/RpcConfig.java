@@ -2,6 +2,8 @@ package com.yocy.yirpc.config;
 
 import com.yocy.yirpc.fault.retry.RetryStrategy;
 import com.yocy.yirpc.fault.retry.RetryStrategyKeys;
+import com.yocy.yirpc.fault.tolerant.TolerantStrategy;
+import com.yocy.yirpc.fault.tolerant.TolerantStrategyKeys;
 import com.yocy.yirpc.loadbalancer.LoadBalancerKeys;
 import com.yocy.yirpc.serializer.SerializerKeys;
 import lombok.Data;
@@ -58,5 +60,10 @@ public class RpcConfig {
      * 重试策略
      */
     private String retryStrategy = RetryStrategyKeys.NO;
+
+    /**
+     * 容错策略
+     */
+    private String tolerantStrategy = TolerantStrategyKeys.FAIL_FAST;
     
 }

@@ -1,0 +1,4 @@
+failBack=com.yocy.yirpc.fault.tolerant.FailBackTolerantStrategy
+failFast=com.yocy.yirpc.fault.tolerant.FailFastTolerantStrategy
+failOver=com.yocy.yirpc.fault.tolerant.FailOverTolerantStrategy
+failSafe=com.yocy.yirpc.fault.tolerant.FailSafeTolerantStrategy
