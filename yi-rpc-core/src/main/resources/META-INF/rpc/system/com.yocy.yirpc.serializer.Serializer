@@ -1,2 +1,4 @@
-c=com.yocy.yirpc.serializer.JdkSerializer
-d=com.yocy.yirpc.serializer.HessianSerializer
+jdk=com.yocy.yirpc.serializer.JdkSerializer
+hessian=com.yocy.yirpc.serializer.HessianSerializer
+json=com.yocy.yirpc.serializer.JsonSerializer
+kryo=com.yocy.yirpc.serializer.KryoSerializer

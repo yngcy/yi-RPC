@@ -10,6 +10,8 @@ import com.yocy.yirpc.registry.Registry;
 import com.yocy.yirpc.registry.RegistryFactory;
 import com.yocy.yirpc.server.HttpServer;
 import com.yocy.yirpc.server.VertxHttpServer;
+import com.yocy.yirpc.server.tcp.VertxTcpServer;
+import io.vertx.core.Vertx;
 
 /**
  * 服务提供者示例类
@@ -32,15 +34,15 @@ public class ProviderExample {
         Registry registry = RegistryFactory.getInstance(registryConfig.getRegistry());
         ServiceMetaInfo serviceMetaInfo = new ServiceMetaInfo();
         serviceMetaInfo.setServiceName(serviceName);
-        // todo 地址方法不统一
-//        serviceMetaInfo.setServiceAddress(rpcConfig.getServerHost() + ":" + rpcConfig.getServerPort());
+        serviceMetaInfo.setServiceHost(rpcConfig.getServerHost());
+        serviceMetaInfo.setServicePort(rpcConfig.getServerPort());
         try {
             registry.register(serviceMetaInfo);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        // 启动 web 服务
-        HttpServer httpServer = new VertxHttpServer();
-        httpServer.doStart(RpcApplication.getRpcConfig().getServerPort());
+        // 启动 TCP 服务
+        VertxTcpServer vertxTcpServer = new VertxTcpServer();
+        vertxTcpServer.doStart(8080);
     }
 }

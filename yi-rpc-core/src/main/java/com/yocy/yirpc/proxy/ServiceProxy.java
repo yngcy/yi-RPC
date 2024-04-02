@@ -1,6 +1,7 @@
 package com.yocy.yirpc.proxy;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.yocy.yirpc.RpcApplication;
@@ -9,15 +10,22 @@ import com.yocy.yirpc.constant.RpcConstant;
 import com.yocy.yirpc.model.RpcRequest;
 import com.yocy.yirpc.model.RpcResponse;
 import com.yocy.yirpc.model.ServiceMetaInfo;
+import com.yocy.yirpc.protocol.*;
 import com.yocy.yirpc.registry.Registry;
 import com.yocy.yirpc.registry.RegistryFactory;
 import com.yocy.yirpc.serializer.JdkSerializer;
 import com.yocy.yirpc.serializer.Serializer;
 import com.yocy.yirpc.serializer.SerializerFactory;
+import com.yocy.yirpc.server.tcp.VertxTcpClient;
+import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.net.NetClient;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 服务代理（JDK 动态代理）
@@ -28,20 +36,6 @@ public class ServiceProxy implements InvocationHandler {
 
     /**
      * 调用代理
-     * @param proxy the proxy instance that the method was invoked on
-     *
-     * @param method the {@code Method} instance corresponding to
-     * the interface method invoked on the proxy instance.  The declaring
-     * class of the {@code Method} object will be the interface that
-     * the method was declared in, which may be a superinterface of the
-     * proxy interface that the proxy class inherits the method through.
-     *
-     * @param args an array of objects containing the values of the
-     * arguments passed in the method invocation on the proxy instance,
-     * or {@code null} if interface method takes no arguments.
-     * Arguments of primitive types are wrapped in instances of the
-     * appropriate primitive wrapper class, such as
-     * {@code java.lang.Integer} or {@code java.lang.Boolean}.
      *
      * @return
      * @throws Throwable
@@ -61,8 +55,6 @@ public class ServiceProxy implements InvocationHandler {
                 .build();
         
         try {
-            // 序列化
-            byte[] bodyBytes = serializer.serialize(rpcRequest);
             // 从注册中心获取服务提供者请求地址
             RpcConfig rpcConfig = RpcApplication.getRpcConfig();
             Registry registry = RegistryFactory.getInstance(rpcConfig.getRegistryConfig().getRegistry());
@@ -76,19 +68,12 @@ public class ServiceProxy implements InvocationHandler {
             // 暂时先取一个
             ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
             
-            // 发送请求
-            try (HttpResponse httpResponse = HttpRequest.post(selectedServiceMetaInfo.getServiceAddress())
-                    .body(bodyBytes)
-                    .execute()) {
-                byte[] result = httpResponse.bodyBytes();
-                // 反序列化
-                RpcResponse rpcResponse = serializer.deserialize(result, RpcResponse.class);
-                return rpcResponse.getData();
-            }
+            // 发送 TCP 请求
+            RpcResponse rpcResponse = VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
+            return rpcResponse;
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("调用失败");
         }
         
-        return null;
     }
 }
