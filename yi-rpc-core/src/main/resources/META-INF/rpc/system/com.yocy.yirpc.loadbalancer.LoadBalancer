@@ -1,0 +1,3 @@
+roundRobin=com.yocy.yirpc.loadbalancer.RoundRobinLoadBalancer
+random=com.yocy.yirpc.loadbalancer.RandomLoadBalancer
+consistentHash=com.yocy.yirpc.loadbalancer.ConsistentHashLoadBalancer

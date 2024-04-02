@@ -1,31 +1,25 @@
 package com.yocy.yirpc.proxy;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.IdUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import com.yocy.yirpc.RpcApplication;
 import com.yocy.yirpc.config.RpcConfig;
 import com.yocy.yirpc.constant.RpcConstant;
+import com.yocy.yirpc.loadbalancer.LoadBalancer;
+import com.yocy.yirpc.loadbalancer.LoadBalancerFactory;
 import com.yocy.yirpc.model.RpcRequest;
 import com.yocy.yirpc.model.RpcResponse;
 import com.yocy.yirpc.model.ServiceMetaInfo;
-import com.yocy.yirpc.protocol.*;
 import com.yocy.yirpc.registry.Registry;
 import com.yocy.yirpc.registry.RegistryFactory;
-import com.yocy.yirpc.serializer.JdkSerializer;
 import com.yocy.yirpc.serializer.Serializer;
 import com.yocy.yirpc.serializer.SerializerFactory;
 import com.yocy.yirpc.server.tcp.VertxTcpClient;
-import io.vertx.core.Vertx;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.net.NetClient;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.Map;
 
 /**
  * 服务代理（JDK 动态代理）
@@ -65,8 +59,12 @@ public class ServiceProxy implements InvocationHandler {
             if (CollUtil.isEmpty(serviceMetaInfoList)) {
                 throw new RuntimeException("暂无服务地址");
             }
-            // 暂时先取一个
-            ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
+            // 负载均衡
+            LoadBalancer loadBalancer = LoadBalancerFactory.getInstance(rpcConfig.getLoadBalancer());
+            // 将方法名（请求路径）作为负载均衡参数
+            Map<String, Object> requestParams = new HashMap<>();
+            requestParams.put("methodName", rpcRequest.getMethodName());
+            ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfoList);
             
             // 发送 TCP 请求
             RpcResponse rpcResponse = VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
