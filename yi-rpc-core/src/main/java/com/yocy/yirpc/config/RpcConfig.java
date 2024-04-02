@@ -1,5 +1,7 @@
 package com.yocy.yirpc.config;
 
+import com.yocy.yirpc.fault.retry.RetryStrategy;
+import com.yocy.yirpc.fault.retry.RetryStrategyKeys;
 import com.yocy.yirpc.loadbalancer.LoadBalancerKeys;
 import com.yocy.yirpc.serializer.SerializerKeys;
 import lombok.Data;
@@ -51,5 +53,10 @@ public class RpcConfig {
      * 负载均衡器
      */
     private String loadBalancer = LoadBalancerKeys.RANDOM;
+
+    /**
+     * 重试策略
+     */
+    private String retryStrategy = RetryStrategyKeys.NO;
     
 }

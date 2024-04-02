@@ -1,0 +1,2 @@
+no=com.yocy.yirpc.fault.retry.NoRetryStrategy
+fixedInterval=com.yocy.yirpc.fault.retry.FixedIntervalRetryStrategy
