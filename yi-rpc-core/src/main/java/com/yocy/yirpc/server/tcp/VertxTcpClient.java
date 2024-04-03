@@ -16,6 +16,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 /**
+ * TCP 请求客户端
  * @author <a href="https://github.com/ygncy">YounGCY</a>
  */
 public class VertxTcpClient {
@@ -40,6 +41,7 @@ public class VertxTcpClient {
                     header.setVersion(ProtocolConstant.PROTOCOL_VERSION);
                     header.setSerializer((byte) ProtocolMessageSerializerEnum.getEnumByValue(RpcApplication.getRpcConfig().getSerializer()).getKey());
                     header.setType((byte) ProtocolMessageTypeEnum.REQUEST.getKey());
+                    // 生成全局请求ID
                     header.setRequestId(IdUtil.getSnowflakeNextId());
                     protocolMessage.setHeader(header);
                     protocolMessage.setBody(rpcRequest);
@@ -56,7 +58,8 @@ public class VertxTcpClient {
                     TcpBufferHandlerWrapper bufferHandlerWrapper = new TcpBufferHandlerWrapper(
                             buffer -> {
                                 try {
-                                    ProtocolMessage<RpcResponse> rpcResponseProtocolMessage = (ProtocolMessage<RpcResponse>) ProtocolMessageDecoder.decode(buffer);
+                                    ProtocolMessage<RpcResponse> rpcResponseProtocolMessage = 
+                                            (ProtocolMessage<RpcResponse>) ProtocolMessageDecoder.decode(buffer);
                                     responseFuture.complete(rpcResponseProtocolMessage.getBody());
                                 } catch (IOException e) {
                                     throw new RuntimeException("消息协议解码错误");

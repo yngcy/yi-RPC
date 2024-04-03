@@ -19,20 +19,6 @@ public class ServiceProxy implements InvocationHandler {
 
     /**
      * 调用代理
-     * @param proxy the proxy instance that the method was invoked on
-     *
-     * @param method the {@code Method} instance corresponding to
-     * the interface method invoked on the proxy instance.  The declaring
-     * class of the {@code Method} object will be the interface that
-     * the method was declared in, which may be a superinterface of the
-     * proxy interface that the proxy class inherits the method through.
-     *
-     * @param args an array of objects containing the values of the
-     * arguments passed in the method invocation on the proxy instance,
-     * or {@code null} if interface method takes no arguments.
-     * Arguments of primitive types are wrapped in instances of the
-     * appropriate primitive wrapper class, such as
-     * {@code java.lang.Integer} or {@code java.lang.Boolean}.
      *
      * @return
      * @throws Throwable
@@ -55,7 +41,7 @@ public class ServiceProxy implements InvocationHandler {
             byte[] bodyBytes = serializer.serialize(rpcRequest);
             // 发送请求
             // todo 注意，这里地址是硬编码（需要使用注册中心和服务发现机制解决）
-            try (HttpResponse httpResponse = HttpRequest.post("http://localhost:8080")
+            try (HttpResponse httpResponse = HttpRequest.post("http://localhost:8081")
                     .body(bodyBytes)
                     .execute()) {
                 byte[] result = httpResponse.bodyBytes();

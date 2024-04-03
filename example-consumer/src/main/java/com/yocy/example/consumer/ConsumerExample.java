@@ -2,6 +2,7 @@ package com.yocy.example.consumer;
 
 import com.yocy.example.common.model.User;
 import com.yocy.example.common.service.UserService;
+import com.yocy.yirpc.bootstrap.ConsumerBootstrap;
 import com.yocy.yirpc.config.RpcConfig;
 import com.yocy.yirpc.proxy.ServiceProxyFactory;
 import com.yocy.yirpc.utils.ConfigUtils;
@@ -13,6 +14,9 @@ import com.yocy.yirpc.utils.ConfigUtils;
  */
 public class ConsumerExample {
     public static void main(String[] args) {
+        // 服务消费者初始化
+        ConsumerBootstrap.init();
+        
         // 获取代理
         UserService userService = ServiceProxyFactory.getProxy(UserService.class);
         User user = new User();
@@ -24,8 +28,6 @@ public class ConsumerExample {
         } else {
             System.out.println("user is null!");
         }
-        long number = userService.getNumber();
-        System.out.println(number);
         
     }
 }

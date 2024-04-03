@@ -91,7 +91,7 @@ public class EtcdRegistry implements Registry {
     public List<ServiceMetaInfo> serviceDiscovery(String serviceKey) {
         // 优先从缓存获取服务
         List<ServiceMetaInfo> cachedServiceMetaInfoList = registryServiceCache.readCache();
-        if (cachedServiceMetaInfoList != null) {
+        if (cachedServiceMetaInfoList != null && !cachedServiceMetaInfoList.isEmpty()) {
             return cachedServiceMetaInfoList;
         }
         
@@ -101,7 +101,8 @@ public class EtcdRegistry implements Registry {
         try {
             // 前缀查询
             GetOption getOption = GetOption.builder().isPrefix(true).build();
-            List<KeyValue> keyValues = kvClient.get(ByteSequence.from(searchPrefix, StandardCharsets.UTF_8), getOption)
+            List<KeyValue> keyValues = kvClient
+                    .get(ByteSequence.from(searchPrefix, StandardCharsets.UTF_8), getOption)
                     .get()
                     .getKvs();
             // 解析服务信息

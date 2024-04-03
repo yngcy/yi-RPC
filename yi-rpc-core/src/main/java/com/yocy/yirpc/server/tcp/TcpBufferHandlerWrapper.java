@@ -6,17 +6,26 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.parsetools.RecordParser;
 
 /**
+ * TCP 消息处理器包装<br/>
  * 使用 RecordParser 对原有的 buffer 处理能力进行增强
  * @author <a href="https://github.com/ygncy">YounGCY</a>
  */
 public class TcpBufferHandlerWrapper implements Handler<Buffer> {
-    
+
+    /**
+     * 解析器，用于解决半包、粘包问题
+     */
     private final RecordParser recordParser;
     
     public TcpBufferHandlerWrapper(Handler<Buffer> bufferHandler) {
         recordParser = initRecordParser(bufferHandler);
     }
 
+    /**
+     * 初始化解析器
+     * @param bufferHandler
+     * @return
+     */
     private RecordParser initRecordParser(Handler<Buffer> bufferHandler) {
         // 构造 Parser
         RecordParser parser = RecordParser.newFixed(ProtocolConstant.MESSAGE_HEADER_LENGTH);
@@ -38,8 +47,6 @@ public class TcpBufferHandlerWrapper implements Handler<Buffer> {
                     resultBuffer = Buffer.buffer();
                 }
             }
-            
-            
         });
     
         return parser;
