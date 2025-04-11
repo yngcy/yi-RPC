@@ -5,7 +5,7 @@ import com.yocy.yirpc.spi.SpiLoader;
 /**
  * 负载均衡工厂（工厂模式，用于获取负载均衡器对象）
  * 
- * @author <a href="https://github.com/ygncy">YounGCY</a>
+ * @author <a href="https://github.com/yngcy">YounGCY</a>
  */
 public class LoadBalancerFactory {
     static {
